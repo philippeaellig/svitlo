@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Svitlo{% endblock %}
+
+{% block body %}
+    <h1>{{ 'thank.you'|trans }}</h1>
+    <p>{{ 'you.will.get.an.email.with.all.informations'|trans }}</p>
+    <a class="btn btn-default"
+       href="{{ path('app_show_campaign', {slug: campaign.slug}) }}">{{ 'back.to.the.campaign' }}</a>
+{% endblock %}

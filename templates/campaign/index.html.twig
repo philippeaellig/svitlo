@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Svitlo{% endblock %}
+
+{% block body %}
+    <h1>{{ campaign.title }}</h1>
+    {% if campaign.description %}
+        <div class="row">
+            <div class="col">
+                {{ campaign.description|raw }}
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col">
+            <h3>{{ 'choose.a.child'|trans }}</h3>
+        </div>
+    </div>
+    <div class="row row-cols-3 g-3">
+        {% for child in campaign.shuffledChildren %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ child.firstName }} *</h5>
+                        <p class="card-text">{{ 'age'|trans }}: {{ child.age }}
+                            <br>{{ 'gender'|trans }}: {{ child.gender|gender|trans }}</p>
+                        {% if child.donor is null %}
+                            <a href="{{ path('app_become_a_donor_campaign', {id: child.id}) }}" class="btn btn-primary">{{ 'give.this.child.a.present'|trans }}</a>
+                        {% else %}
+                            <p>{{ 'this.child.is.already.gifted'|trans }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col">
+            <p>* {{ 'name.is.anonymized'|trans }}</p>
+        </div>
+    </div>
+{% endblock %}

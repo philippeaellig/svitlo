@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="de" target-language="de" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="CXG0RHu" resname="svitlo.is.a.nonprofit.and.private.application.created.by.Philippe.Aellig">
+        <source>svitlo.is.a.nonprofit.and.private.application.created.by.Philippe.Aellig</source>
+        <target>Svitlo ist eine nonprofit und private Applikation. Erstellt von Philippe Aellig</target>
+      </trans-unit>
+      <trans-unit id="SISvR8M" resname="giving.presents.to.children">
+        <source>giving.presents.to.children</source>
+        <target>Kinder beschenken</target>
+      </trans-unit>
+      <trans-unit id="nbM8IuC" resname="to.the.campaign">
+        <source>to.the.campaign</source>
+        <target>Zur Kampagne</target>
+      </trans-unit>
+      <trans-unit id="M8f9UQl" resname="start.a.donation.campain.now">
+        <source>start.a.donation.campain.now</source>
+        <target>Eigene Geschenk-Kampagne starten</target>
+      </trans-unit>
+      <trans-unit id="ZKuytNs" resname="contact.us">
+        <source>contact.us</source>
+        <target>Kontaktiere mich</target>
+      </trans-unit>
+      <trans-unit id="PcJgskc" resname="campaign">
+        <source>campaign</source>
+        <target>Kampagne</target>
+      </trans-unit>
+      <trans-unit id="KYT.Y1p" resname="choose.a.child">
+        <source>choose.a.child</source>
+        <target>Wähle ein Kind</target>
+      </trans-unit>
+      <trans-unit id="AT9UQAy" resname="age">
+        <source>age</source>
+        <target>Alter</target>
+      </trans-unit>
+      <trans-unit id="3p.q6ot" resname="gender">
+        <source>gender</source>
+        <target>Geschlecht</target>
+      </trans-unit>
+      <trans-unit id="_x7N6T6" resname="give.this.child.a.present">
+        <source>give.this.child.a.present</source>
+        <target>Diesem Kind ein Geschenk geben</target>
+      </trans-unit>
+      <trans-unit id="XUh3WET" resname="this.child.is.already.gifted">
+        <source>this.child.is.already.gifted</source>
+        <target>Dieses Kind erhält bereits ein Geschenk</target>
+      </trans-unit>
+      <trans-unit id="h0IM2bg" resname="name.is.anonymized">
+        <source>name.is.anonymized</source>
+        <target>Diese Name wurde durch einen generischen Namen ersetzt, um die Identität vom Kind zu schätzen. Der richtige Name ist dem Kampagnenleiter bekannt.</target>
+      </trans-unit>
+      <trans-unit id="RZra8wp" resname="current.campaigns">
+        <source>current.campaigns</source>
+        <target>Aktuelle Kampagnen</target>
+      </trans-unit>
+      <trans-unit id="f4SxsuL" resname="become.a.donor">
+        <source>become.a.donor</source>
+        <target>Kind beschenken</target>
+      </trans-unit>
+      <trans-unit id="TP3eab3" resname="firstname">
+        <source>firstname</source>
+        <target>Vorname</target>
+      </trans-unit>
+      <trans-unit id="ZVwy_4R" resname="surname">
+        <source>surname</source>
+        <target>Nachname</target>
+      </trans-unit>
+      <trans-unit id="giREF.l" resname="email">
+        <source>email</source>
+        <target>E-Mail</target>
+      </trans-unit>
+      <trans-unit id="J1OAGnP" resname="thank.you">
+        <source>thank.you</source>
+        <target>Vielen Dank</target>
+      </trans-unit>
+      <trans-unit id="MWTHF8_" resname="you.will.get.an.email.with.all.informations">
+        <source>you.will.get.an.email.with.all.informations</source>
+        <target>Wir haben dir eine Email mit allen Informationen gesendet.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

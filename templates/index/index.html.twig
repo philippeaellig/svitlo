@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Svitlo{% endblock %}
+
+{% block body %}
+    <h1>{{ 'giving.presents.to.children'|trans }}</h1>
+    <h3>{{ 'current.campaigns'|trans }}</h3>
+    <div class="row row-cols-3 g-3">
+        {% for campaign in campaigns %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>{{ campaign.title }}</h4>
+                        <a class="btn btn-primary"
+                           href="{{ path('app_show_campaign', {slug: campaign.slug}) }}">{{ 'to.the.campaign'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <p>{{ 'start.a.donation.campain.now'|trans }}</p>
+    <p><a href="mailto:info@svitlo.ch">{{ 'contact.us'|trans }}</a></p>
+{% endblock %}
