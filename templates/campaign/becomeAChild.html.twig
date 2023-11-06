@@ -3,6 +3,9 @@
 {% block title %}Svitlo{% endblock %}
 
 {% block body %}
+
+    <a class="btn btn-secondary"
+       href="{{ path('app_show_campaign', {slug: campaign.slug}) }}">{{ 'back.to.the.campaign' }}</a>
     <h1>{{ child.firstName }}</h1>
     <p>{{ 'age'|trans }}: {{ child.age }}
         <br>{{ 'gender'|trans }}: {{ child.gender|gender|trans }}</p>
