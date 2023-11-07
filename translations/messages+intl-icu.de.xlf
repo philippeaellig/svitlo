@@ -81,6 +81,10 @@
         <source>you.will.get.an.email.with.all.informations</source>
         <target>Wir haben dir eine Email mit allen Informationen gesendet.</target>
       </trans-unit>
+      <trans-unit id="J2UEjF2" resname="back.to.the.campaign">
+        <source>back.to.the.campaign</source>
+        <target>zurück zur Kampagne</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
