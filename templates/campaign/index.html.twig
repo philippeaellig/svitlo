@@ -22,8 +22,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ child.firstName }}</h5>
-                        <p class="card-text">{{ 'age'|trans }}: {{ child.age }}
-                            <br>{{ 'gender'|trans }}: {{ child.gender|gender|trans }}</p>
+                        <p class="card-text">{% if child.age %}{{ 'age'|trans }}: {{ child.age }}{% endif %}
+                            {% if child.gender %}<br>{{ 'gender'|trans }}: {{ child.gender|gender|trans }}{% endif %}
+                            {% if child.identifier %}<br>{{ 'identifier'|trans }}: {{ child.identifier }}{% endif %}</p>
                         {% if child.donor is null %}
                             <a href="{{ path('app_become_a_donor_campaign', {id: child.id}) }}" class="btn btn-primary">{{ 'give.this.child.a.present'|trans }}</a>
                         {% else %}
