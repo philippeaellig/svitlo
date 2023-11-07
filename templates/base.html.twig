@@ -6,7 +6,13 @@
     <meta name="description" content="">
     <meta name="author" content="Philippe Aellig">
     <meta name="generator" content="Philippe Aellig">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    <meta property="og:title" content="{% block title %}Svitlo{% endblock %}" />
+    <meta property="og:type" content="image/jpeg" />
+    <meta property="og:url" content="{% block ogUrl %}{{ app.request.uri }}{% endblock %}" />
+    <meta property="og:image" content="{% block ogImage %}{{ absolute_url(asset('build/images/svitlo.jpg') ) }}{% endblock %}" />
+
+    <title>{{ block('title') }}</title>
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
