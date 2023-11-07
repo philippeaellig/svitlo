@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>{{ 'giving.presents.to.children'|trans }}</h1>
-    <h3>{{ 'current.campaigns'|trans }}</h3>
+    <h2>{{ 'current.campaigns'|trans }}</h2>
     <div class="row row-cols-3 g-3">
         {% for campaign in campaigns %}
             <div class="col">
@@ -18,6 +18,6 @@
             </div>
         {% endfor %}
     </div>
-    <p>{{ 'start.a.donation.campain.now'|trans }}</p>
+    <h2>{{ 'start.a.donation.campain.now'|trans }}</h2>
     <p><a href="mailto:info@svitlo.ch">{{ 'contact.us'|trans }}</a></p>
 {% endblock %}
