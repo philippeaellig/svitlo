@@ -105,6 +105,10 @@
         <source>female</source>
         <target>Mädchen</target>
       </trans-unit>
+      <trans-unit id="CJVDc8Q" resname="your.data">
+        <source>your.data</source>
+        <target>Deine Daten</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
