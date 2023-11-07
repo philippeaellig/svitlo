@@ -49,10 +49,6 @@
         <source>this.child.is.already.gifted</source>
         <target>Dieses Kind erhält bereits ein Geschenk</target>
       </trans-unit>
-      <trans-unit id="h0IM2bg" resname="name.is.anonymized">
-        <source>name.is.anonymized</source>
-        <target>Diese Name wurde durch einen generischen Namen ersetzt, um die Identität vom Kind zu schätzen. Der richtige Name ist dem Kampagnenleiter bekannt.</target>
-      </trans-unit>
       <trans-unit id="RZra8wp" resname="current.campaigns">
         <source>current.campaigns</source>
         <target>Aktuelle Kampagnen</target>
