@@ -34,6 +34,9 @@ class Child
     #[ORM\OneToOne(mappedBy: 'child', cascade: ['persist', 'remove'])]
     private ?Donor $donor = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $identifier = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,6 +103,18 @@ class Child
         }
 
         $this->donor = $donor;
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }
