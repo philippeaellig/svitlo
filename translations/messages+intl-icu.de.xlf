@@ -81,6 +81,10 @@
         <source>back.to.the.campaign</source>
         <target>zurück zur Kampagne</target>
       </trans-unit>
+      <trans-unit id="KFQ324x" resname="identifier">
+        <source>identifier</source>
+        <target>Eindeutige Kennung</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
