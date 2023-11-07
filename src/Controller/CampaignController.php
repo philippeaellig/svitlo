@@ -14,11 +14,15 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 
 class CampaignController extends AbstractController
 {
@@ -43,11 +47,12 @@ class CampaignController extends AbstractController
 
     #[Route('/campaign/become-a-donor/{id}', name: 'app_become_a_donor_campaign')]
     public function becomeADonor(
-        CampaignRepository $campaignRepository,
-        TranslatorInterface $translator,
+        CampaignRepository     $campaignRepository,
+        TranslatorInterface    $translator,
         EntityManagerInterface $entityManager,
-        Request $request,
-        Child $child
+        Request                $request,
+        MailerInterface        $mailer,
+        Child                  $child
     ): Response
     {
         $donor = new Donor();
@@ -59,6 +64,10 @@ class CampaignController extends AbstractController
             ])
             ->add('surname', TextType::class, [
                 'label' => $translator->trans('surname') . ' *',
+                'required' => true,
+            ])
+            ->add('phone', TextType::class, [
+                'label' => $translator->trans('phone') . ' *',
                 'required' => true,
             ])
             ->add('email', EmailType::class, [
@@ -75,6 +84,22 @@ class CampaignController extends AbstractController
             $entityManager->persist($donor);
             $entityManager->flush();
 
+            $email = (new TemplatedEmail())
+                ->from('philippe@aelligs.ch')
+                ->to(new Address($donor->getEmail()))
+                ->bcc($donor->getChild()->getCampaign()->getMail())
+                ->replyTo($donor->getChild()->getCampaign()->getMail())
+                ->subject($translator->trans('thank.you.for.your.donation'))
+                ->htmlTemplate('emails/confirmation.html.twig')
+                ->context([
+                    'donor' => $donor,
+                ]);
+
+            try {
+                $mailer->send($email);
+            } catch (TransportExceptionInterface $e) {
+            }
+
             return $this->redirectToRoute('app_thank_you_donor', [
                 'slug' => $child->getCampaign()->getSlug()
             ]);
@@ -86,53 +111,53 @@ class CampaignController extends AbstractController
             'controller_name' => 'CampaignController',
         ]);
     }
-/*
-    #[Route('/campaign/generate-children/{slug}', name: 'app_show_campaign')]
-    public function generateChildren(
-        ChildTemplateRepository $childTemplateRepository,
-        ChildRepository         $childRepository,
-        CampaignRepository      $campaignRepository,
-        EntityManagerInterface  $entityManager,
-        string                  $slug
-    ): Response
-    {
-        $campaign = $campaignRepository
-            ->findOneBy(['slug' => $slug]);
+    /*
+        #[Route('/campaign/generate-children/{slug}', name: 'app_show_campaign')]
+        public function generateChildren(
+            ChildTemplateRepository $childTemplateRepository,
+            ChildRepository         $childRepository,
+            CampaignRepository      $campaignRepository,
+            EntityManagerInterface  $entityManager,
+            string                  $slug
+        ): Response
+        {
+            $campaign = $campaignRepository
+                ->findOneBy(['slug' => $slug]);
 
-        foreach (Child::$GENDER as $key => $gender) {
-            while ($campaign->getNumberOfFemale() > $childRepository->getNumberOfChildrenByGenderAndCampaign($key, $campaign)) {
-                $child = new Child();
-                $template = $childTemplateRepository->findRandomTemplateByGender($key);
-                $child->setFirstName($template->getFirstName());
-                $child->setGender($template->getGender());
-                $child->setCampaign($campaign);
-                $entityManager->persist($child);
-                $entityManager->flush();
+            foreach (Child::$GENDER as $key => $gender) {
+                while ($campaign->getNumberOfFemale() > $childRepository->getNumberOfChildrenByGenderAndCampaign($key, $campaign)) {
+                    $child = new Child();
+                    $template = $childTemplateRepository->findRandomTemplateByGender($key);
+                    $child->setFirstName($template->getFirstName());
+                    $child->setGender($template->getGender());
+                    $child->setCampaign($campaign);
+                    $entityManager->persist($child);
+                    $entityManager->flush();
+                }
             }
+
+            return $this->render('campaign/index.html.twig', [
+                'campaign' => $campaign,
+                'controller_name' => 'CampaignController',
+            ]);
         }
 
-        return $this->render('campaign/index.html.twig', [
-            'campaign' => $campaign,
-            'controller_name' => 'CampaignController',
-        ]);
-    }
+        #[Route('/campaign/create', name: 'app_create_campaign')]
+        public function create(ValidatorInterface $validator, EntityManagerInterface $entityManager, CampaignRepository $campaignRepository): Response
+        {
+            $campaign = new Campaign();
+            $slugger = new AsciiSlugger();
+            $campaign->setSlug($slugger->slug(uniqid())->lower());
 
-    #[Route('/campaign/create', name: 'app_create_campaign')]
-    public function create(ValidatorInterface $validator, EntityManagerInterface $entityManager, CampaignRepository $campaignRepository): Response
-    {
-        $campaign = new Campaign();
-        $slugger = new AsciiSlugger();
-        $campaign->setSlug($slugger->slug(uniqid())->lower());
-
-        $errors = $validator->validate($campaign);
-        if (count($errors) > 0) {
-            return new Response((string)$errors, 400);
-        }
-        $entityManager->persist($campaign);
-        $entityManager->flush();
-        // redirect to index controiller
-        return $this->redirectToRoute('app_show_campaign', [
-            'slug' => $campaign->getSlug()
-        ]);
-    }*/
+            $errors = $validator->validate($campaign);
+            if (count($errors) > 0) {
+                return new Response((string)$errors, 400);
+            }
+            $entityManager->persist($campaign);
+            $entityManager->flush();
+            // redirect to index controiller
+            return $this->redirectToRoute('app_show_campaign', [
+                'slug' => $campaign->getSlug()
+            ]);
+        }*/
 }

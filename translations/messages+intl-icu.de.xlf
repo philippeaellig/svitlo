@@ -85,6 +85,26 @@
         <source>identifier</source>
         <target>Eindeutige Kennung</target>
       </trans-unit>
+      <trans-unit id="RVadpX9" resname="phone">
+        <source>phone</source>
+        <target>Telefon</target>
+      </trans-unit>
+      <trans-unit id="7gKu7wk" resname="thank.you.for.your.donation">
+        <source>thank.you.for.your.donation</source>
+        <target>Denke für dein Geschenk</target>
+      </trans-unit>
+      <trans-unit id="qLNOWnJ" resname="you.picked.this.child">
+        <source>you.picked.this.child</source>
+        <target>Du hast dieses Kind gewählt</target>
+      </trans-unit>
+      <trans-unit id="DSSOgsY" resname="male">
+        <source>male</source>
+        <target>Junge</target>
+      </trans-unit>
+      <trans-unit id="nxZROaj" resname="female">
+        <source>female</source>
+        <target>Mädchen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

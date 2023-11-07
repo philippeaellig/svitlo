@@ -8,7 +8,6 @@
        href="{{ path('app_show_campaign', {slug: child.campaign.slug}) }}">{{ 'back.to.the.campaign'|trans }}</a>
     <h1>{{ child.firstName }}</h1>
     <p>{{ 'age'|trans }}: {{ child.age }}
-        <br>{{ 'gender'|trans }}: {{ child.gender|gender|trans }}</p>
-
+        <br>{{ 'gender'|trans }}: {% if child.gender|gender == 'male' %}{{ 'male'|trans }}{% elseif child.gender|gender == 'female' %}{{ 'female'|trans }}{% endif %}</p>
     {{ form(form) }}
 {% endblock %}

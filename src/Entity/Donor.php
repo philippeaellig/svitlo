@@ -26,6 +26,9 @@ class Donor
     #[ORM\JoinColumn(nullable: false)]
     private ?Child $child = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $phone = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Donor
     public function setChild(Child $child): static
     {
         $this->child = $child;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }

@@ -34,6 +34,9 @@ class Campaign
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $mail = null;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -146,6 +149,18 @@ class Campaign
     public function setTitle(string $title): static
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): static
+    {
+        $this->mail = $mail;
 
         return $this;
     }
