@@ -13,7 +13,19 @@ Encore
     .setPublicPath('/build')
     // only needed for CDN's or subdirectory deploy
     //.setManifestKeyPrefix('build/')
-
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'http',
+        };
+        options.allowedHosts = 'all';
+        options.liveReload = true;
+        options.static = {
+            watch: false
+        };
+        options.watchFiles = {
+            paths: ['src/**/*.php', 'templates/**/*'],
+        };
+    })
     /*
      * ENTRY CONFIG
      *
