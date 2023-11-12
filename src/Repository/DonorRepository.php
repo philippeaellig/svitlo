@@ -52,8 +52,6 @@ class DonorRepository extends ServiceEntityRepository
             ->join('c.campaign', 'ca')
             ->andWhere('ca = :ca')
             ->setParameter('ca', $campaign)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
