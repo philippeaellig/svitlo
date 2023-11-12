@@ -304,14 +304,18 @@
             <center>
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
+                        <td class="header-sm">
+                            <p>{{  'please.do.not.reply.on.this.email.'|trans }}<br/>
+                                {{ 'if.there.are.any.questions.contact.the.campaign.owner.%mail%'|trans({'%mail%': donor.child.campaign.mail}) }}</p>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="header-lg">
                             {{ 'thank.you'|trans }}
                         </td>
                     </tr>
                     <tr>
                         <td class="free-text">
-                            {{  'please.do.not.reply.on.this.email.'|trans }}
-                            {{ 'if.there.are.any.questions.contact.the.campaign.owner.%mail%'|trans({'%mail%': donor.child.campaign.mail}) }}
                             <h3>{{ donor.child.campaign.title }}</h3>
                             {{ donor.child.campaign.description|raw }}
                         </td>
