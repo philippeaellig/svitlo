@@ -4,6 +4,9 @@
 
 {% block body %}
     <h1>{{ campaign.title }}</h1>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user == campaign %}
+        <a href="{{ path('app_export_campaign', {'slug': campaign.slug}) }}" class="btn btn-secondary">{{ 'export'|trans }}</a>
+    {% endif %}
     {% if campaign.description %}
         <div class="row">
             <div class="col">

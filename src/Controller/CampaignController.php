@@ -8,12 +8,14 @@ use App\Entity\Donor;
 use App\Repository\CampaignRepository;
 use App\Repository\ChildRepository;
 use App\Repository\ChildTemplateRepository;
+use App\Repository\DonorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\WrappedTemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -29,6 +31,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Mime\Crypto\DkimSigner;
 use Twig\Environment;
 use Symfony\Bundle\SecurityBundle\Security;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CampaignController extends AbstractController
 {
@@ -94,6 +98,57 @@ class CampaignController extends AbstractController
         return $this->redirectToRoute('app_show_campaign', [
             'slug' => $donor->getChild()->getCampaign()->getSlug()
         ]);
+    }
+
+
+    #[Route('/campaign/export/{slug}', name: 'app_export_campaign')]
+    public function export(
+        CampaignRepository $campaignRepository,
+        DonorRepository    $donorRepository,
+        Security           $security,
+        Campaign           $campaign,
+    )
+    {
+        // check if user is campaign owner
+        if ($campaign === $security->getUser()) {
+            // export donors to excel
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Firstname');
+            $sheet->setCellValue('B1', 'Surname');
+            $sheet->setCellValue('C1', 'Phone');
+            $sheet->setCellValue('D1', 'Email');
+            $sheet->setCellValue('E1', 'Child Name');
+            $sheet->setCellValue('F1', 'Child Identifier');
+            $sheet->setCellValue('G1', 'Child Age');
+            $sheet->setCellValue('H1', 'Campaign');
+            $sheet->setCellValue('I1', 'Created At');
+
+            // loop donors
+            $donors = $donorRepository->getByCampaign($campaign);
+            $index = 2;
+            /** @var Donor $donor */
+            foreach ($donors as $donor) {
+                $sheet->setCellValue('A' . $index, $donor->getFirstname());
+                $sheet->setCellValue('B' . $index, $donor->getSurname());
+                $sheet->setCellValue('C' . $index, $donor->getPhone());
+                $sheet->setCellValue('D' . $index, $donor->getEmail());
+                $sheet->setCellValue('E' . $index, $donor->getChild()->getFirstname());
+                $sheet->setCellValue('F' . $index, $donor->getChild()->getIdentifier());
+                $sheet->setCellValue('G' . $index, $donor->getChild()->getAge());
+                $sheet->setCellValue('H' . $index, $donor->getChild()->getCampaign()->getTitle());
+                $sheet->setCellValue('I' . $index, $donor->getCreatedAt());
+                $index++;
+            }
+
+            // export spreadsheet
+            $writer = new Xlsx($spreadsheet);
+            $fileName = 'export-' . $campaign->getSlug() . '.xlsx';
+            $writer->save($fileName);
+            // download excel with symfony response
+            return new BinaryFileResponse($fileName);
+
+        }
     }
 
     #[Route('/campaign/become-a-donor/{id}', name: 'app_become_a_donor_campaign')]

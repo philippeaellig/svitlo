@@ -45,4 +45,17 @@ class DonorRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function getByCampaign(\Symfony\Component\Security\Core\User\UserInterface|\App\Entity\Campaign|null $campaign)
+    {
+        return $this->createQueryBuilder('d')
+            ->join('d.child', 'c')
+            ->join('c.campaign', 'ca')
+            ->andWhere('ca = :ca')
+            ->setParameter('ca', $campaign)
+            ->orderBy('d.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
