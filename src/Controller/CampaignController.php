@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,12 +25,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mime\Crypto\DkimSigner;
 
 class CampaignController extends AbstractController
 {
 
     #[Route('/campaign/view/{slug}', name: 'app_show_campaign')]
-    public function index(CampaignRepository $campaignRepository, Campaign $campaign): Response
+    public function index(
+        CampaignRepository $campaignRepository,
+        Campaign           $campaign,
+    ): Response
     {
         return $this->render('campaign/index.html.twig', [
             'campaign' => $campaign,
@@ -52,9 +57,10 @@ class CampaignController extends AbstractController
         TranslatorInterface    $translator,
         EntityManagerInterface $entityManager,
         Request                $request,
-        LoggerInterface $logger,
+        LoggerInterface        $logger,
+        KernelInterface        $appKernel,
         MailerInterface        $mailer,
-        Child                  $child
+        Child                  $child,
     ): Response
     {
         $donor = new Donor();
@@ -86,6 +92,9 @@ class CampaignController extends AbstractController
             $entityManager->persist($donor);
             $entityManager->flush();
 
+            $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svlito.ch', 's1');
+
+
             $email = (new TemplatedEmail())
                 ->from(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
                 ->to(new Address($donor->getEmail()))
@@ -97,8 +106,10 @@ class CampaignController extends AbstractController
                     'donor' => $donor,
                 ]);
 
+            $signedEmail = $signer->sign($email);
+
             try {
-                $mailer->send($email);
+                $mailer->send($signedEmail);
             } catch (TransportExceptionInterface $e) {
                 $logger->error('An error occurred' . $e->getMessage());
             }
