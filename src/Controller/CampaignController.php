@@ -61,7 +61,7 @@ class CampaignController extends AbstractController
         Request                $request,
         LoggerInterface        $logger,
         KernelInterface        $appKernel,
-        Environment $twig,
+        Environment            $twig,
         MailerInterface        $mailer,
         Child                  $child,
     ): Response
@@ -109,29 +109,16 @@ class CampaignController extends AbstractController
                     'donor' => $donor,
                 ]);
 
-            $html = $this->render('emails/confirmation.html.twig',[
+            $html = $this->render('emails/confirmation.html.twig', [
                 'donor' => $donor,
             ])->getContent();
             $email->html($html);
 
             $signedEmail = $signer->sign($email);
-            if (false) {
-
-                $logger->info('email sent with dkim');
-                try {
-                    $mailer->send($signedEmail);
-                } catch (TransportExceptionInterface $e) {
-                    $logger->error('An error occurred' . $e->getMessage());
-                }
-            }
-            else {
-
-                $logger->info('email sent without dkim');
-                try {
-                    $mailer->send($email);
-                } catch (TransportExceptionInterface $e) {
-                    $logger->error('An error occurred' . $e->getMessage());
-                }
+            try {
+                $mailer->send($signedEmail);
+            } catch (TransportExceptionInterface $e) {
+                $logger->error('An error occurred' . $e->getMessage());
             }
 
 
