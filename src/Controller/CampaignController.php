@@ -9,6 +9,7 @@ use App\Repository\CampaignRepository;
 use App\Repository\ChildRepository;
 use App\Repository\ChildTemplateRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\WrappedTemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -26,6 +27,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mime\Crypto\DkimSigner;
+use Twig\Environment;
 
 class CampaignController extends AbstractController
 {
@@ -59,6 +61,7 @@ class CampaignController extends AbstractController
         Request                $request,
         LoggerInterface        $logger,
         KernelInterface        $appKernel,
+        Environment $twig,
         MailerInterface        $mailer,
         Child                  $child,
     ): Response
@@ -92,7 +95,7 @@ class CampaignController extends AbstractController
             $entityManager->persist($donor);
             $entityManager->flush();
 
-        //    $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svlito.ch', 's1');
+            $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svlito.ch', 's1');
 
 
             $email = (new TemplatedEmail())
@@ -105,7 +108,12 @@ class CampaignController extends AbstractController
                 ->context([
                     'donor' => $donor,
                 ]);
-/*
+
+            $html = $this->render('emails/confirmation.html.twig',[
+                'donor' => $donor,
+            ])->getContent();
+            $email->html($html);
+
             $signedEmail = $signer->sign($email);
             if (false) {
 
@@ -116,7 +124,7 @@ class CampaignController extends AbstractController
                     $logger->error('An error occurred' . $e->getMessage());
                 }
             }
-            else {*/
+            else {
 
                 $logger->info('email sent without dkim');
                 try {
@@ -124,7 +132,7 @@ class CampaignController extends AbstractController
                 } catch (TransportExceptionInterface $e) {
                     $logger->error('An error occurred' . $e->getMessage());
                 }
-         //   }
+            }
 
 
             return $this->redirectToRoute('app_thank_you_donor', [
