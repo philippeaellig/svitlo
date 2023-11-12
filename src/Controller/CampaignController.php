@@ -92,7 +92,7 @@ class CampaignController extends AbstractController
             $entityManager->persist($donor);
             $entityManager->flush();
 
-            $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svlito.ch', 's1');
+        //    $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svlito.ch', 's1');
 
 
             $email = (new TemplatedEmail())
@@ -105,7 +105,7 @@ class CampaignController extends AbstractController
                 ->context([
                     'donor' => $donor,
                 ]);
-
+/*
             $signedEmail = $signer->sign($email);
             if (false) {
 
@@ -116,7 +116,7 @@ class CampaignController extends AbstractController
                     $logger->error('An error occurred' . $e->getMessage());
                 }
             }
-            else {
+            else {*/
 
                 $logger->info('email sent without dkim');
                 try {
@@ -124,7 +124,7 @@ class CampaignController extends AbstractController
                 } catch (TransportExceptionInterface $e) {
                     $logger->error('An error occurred' . $e->getMessage());
                 }
-            }
+         //   }
 
 
             return $this->redirectToRoute('app_thank_you_donor', [
