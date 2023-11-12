@@ -305,8 +305,8 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td class="header-sm">
-                            <p>{{  'please.do.not.reply.on.this.email.'|trans }}<br/>
-                                {{ 'if.there.are.any.questions.contact.the.campaign.owner.%mail%'|trans({'%mail%': donor.child.campaign.mail}) }}</p>
+                            {{  'please.do.not.reply.on.this.email.'|trans }}<br/>
+                                {{ 'if.there.are.any.questions.contact.the.campaign.owner.%mail%'|trans({'%mail%': donor.child.campaign.mail}, 'messages') }}
                         </td>
                     </tr>
                     <tr>

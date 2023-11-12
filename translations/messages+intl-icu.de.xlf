@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="zQkOri2" resname="if.there.are.any.questions.contact.the.campaign.owner.%mail%">
         <source>if.there.are.any.questions.contact.the.campaign.owner.%mail%</source>
-        <target>Falls Sie Fragen haben, kontaktieren Sie den Kampagnen-Verantwortlichen: %mail%</target>
+        <target>Falls Sie Fragen haben, kontaktieren Sie den Kampagnen-Verantwortlichen: {mail}</target>
       </trans-unit>
     </body>
   </file>
