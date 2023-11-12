@@ -137,6 +137,10 @@
         <source>resend.confirmation.email</source>
         <target>Bestätigungsmail erneut senden</target>
       </trans-unit>
+      <trans-unit id="51kxXOY" resname="send.magic.login.link.to.campaign.owner">
+        <source>send.magic.login.link.to.campaign.owner</source>
+        <target>Login Link zum Kampagnen-Verantwortlichen senden</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

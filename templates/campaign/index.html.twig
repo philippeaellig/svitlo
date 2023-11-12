@@ -50,7 +50,7 @@
                 <form action="{{ path('login') }}" method="POST">
                     <input type="hidden" name="campaign" value="{{ campaign.id }}">
                     <button class="btn btn-secondary"
-                            type="submit">{{ 'send.magic.login.link.to.campaign.owner' }}</button>
+                            type="submit">{{ 'send.magic.login.link.to.campaign.owner'|trans }}</button>
                 </form>
             </div>
         </div>
