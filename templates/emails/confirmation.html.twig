@@ -310,6 +310,8 @@
                     </tr>
                     <tr>
                         <td class="free-text">
+                            {{  'please.do.not.reply.on.this.email.'|trans }}
+                            {{ 'if.there.are.any.questions.contact.the.campaign.owner.%mail%'|trans({'%mail%': donor.child.campaign.mail}) }}
                             <h3>{{ donor.child.campaign.title }}</h3>
                             {{ donor.child.campaign.description|raw }}
                         </td>
