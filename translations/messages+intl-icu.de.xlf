@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="5G4AC6_" resname="magic.link.sent">
         <source>magic.link.sent</source>
-        <target>Magischer Link senden</target>
+        <target>Magischer Link gesendet</target>
       </trans-unit>
       <trans-unit id="oTVAs1C" resname="check.your.mailbox">
         <source>check.your.mailbox</source>
