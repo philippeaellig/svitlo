@@ -107,7 +107,7 @@ class CampaignController extends AbstractController
                 ]);
 
             $signedEmail = $signer->sign($email);
-            if ($signedEmail) {
+            if (false) {
 
                 $logger->info('email sent with dkim');
                 try {
