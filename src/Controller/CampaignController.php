@@ -85,7 +85,7 @@ class CampaignController extends AbstractController
             $entityManager->flush();
 
             $email = (new TemplatedEmail())
-                ->from('no-reply@svitlo.ch')
+                ->from(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
                 ->to(new Address($donor->getEmail()))
                 ->cc(new Address($donor->getChild()->getCampaign()->getMail()))
 //                ->replyTo($donor->getChild()->getCampaign()->getMail())
