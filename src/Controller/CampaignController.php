@@ -23,6 +23,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
+use Psr\Log\LoggerInterface;
 
 class CampaignController extends AbstractController
 {
@@ -51,6 +52,7 @@ class CampaignController extends AbstractController
         TranslatorInterface    $translator,
         EntityManagerInterface $entityManager,
         Request                $request,
+        LoggerInterface $logger,
         MailerInterface        $mailer,
         Child                  $child
     ): Response
@@ -98,6 +100,7 @@ class CampaignController extends AbstractController
             try {
                 $mailer->send($email);
             } catch (TransportExceptionInterface $e) {
+                $logger->error('An error occurred' . $e->getMessage());
             }
 
             return $this->redirectToRoute('app_thank_you_donor', [
