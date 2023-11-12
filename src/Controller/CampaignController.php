@@ -107,12 +107,25 @@ class CampaignController extends AbstractController
                 ]);
 
             $signedEmail = $signer->sign($email);
+            if ($signedEmail) {
 
-            try {
-                $mailer->send($signedEmail);
-            } catch (TransportExceptionInterface $e) {
-                $logger->error('An error occurred' . $e->getMessage());
+                $logger->info('email sent with dkim');
+                try {
+                    $mailer->send($signedEmail);
+                } catch (TransportExceptionInterface $e) {
+                    $logger->error('An error occurred' . $e->getMessage());
+                }
             }
+            else {
+
+                $logger->info('email sent without dkim');
+                try {
+                    $mailer->send($email);
+                } catch (TransportExceptionInterface $e) {
+                    $logger->error('An error occurred' . $e->getMessage());
+                }
+            }
+
 
             return $this->redirectToRoute('app_thank_you_donor', [
                 'slug' => $child->getCampaign()->getSlug()
