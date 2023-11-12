@@ -100,9 +100,9 @@ class CampaignController extends AbstractController
 
             $email = (new TemplatedEmail())
                 ->from(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
+                ->replyTo(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
                 ->to(new Address($donor->getEmail()))
                 ->cc(new Address($donor->getChild()->getCampaign()->getMail()))
-//                ->replyTo($donor->getChild()->getCampaign()->getMail())
                 ->subject($translator->trans('thank.you.for.your.donation'))
                 ->htmlTemplate('emails/confirmation.html.twig')
                 ->context([
