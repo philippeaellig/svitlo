@@ -95,7 +95,7 @@ class CampaignController extends AbstractController
             $entityManager->persist($donor);
             $entityManager->flush();
 
-            $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svlito.ch', 's1');
+            $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svitlo.ch', 's1');
 
 
             $email = (new TemplatedEmail())
