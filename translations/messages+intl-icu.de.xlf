@@ -117,6 +117,26 @@
         <source>if.there.are.any.questions.contact.the.campaign.owner.%mail%</source>
         <target>Falls Sie Fragen haben, kontaktieren Sie den Kampagnen-Verantwortlichen: {mail}</target>
       </trans-unit>
+      <trans-unit id="5G4AC6_" resname="magic.link.sent">
+        <source>magic.link.sent</source>
+        <target>Magischer Link senden</target>
+      </trans-unit>
+      <trans-unit id="oTVAs1C" resname="check.your.mailbox">
+        <source>check.your.mailbox</source>
+        <target>Überprüfte dein E-Mail Postfach</target>
+      </trans-unit>
+      <trans-unit id="QoghNQ6" resname="login">
+        <source>login</source>
+        <target>Anmelden</target>
+      </trans-unit>
+      <trans-unit id="1g21sUN" resname="we.will.send.an.email.to.the.campaign.owner.with.a.magic.link">
+        <source>we.will.send.an.email.to.the.campaign.owner.with.a.magic.link</source>
+        <target>Wir werden ein E-Mail mit einem Anmelde-Link an den Kampagnen-Verantwortlichen senden.</target>
+      </trans-unit>
+      <trans-unit id="Egv8fSy" resname="resend.confirmation.email">
+        <source>resend.confirmation.email</source>
+        <target>Bestätigungsmail erneut senden</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

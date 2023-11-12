@@ -25,8 +25,15 @@
                         <p class="card-text">{% if child.age %}{{ 'age'|trans }}: {{ child.age }}{% endif %}
                             {% if child.gender %}<br>{{ 'gender'|trans }}: {{ child.gender|gender|trans }}{% endif %}
                             {% if child.identifier %}<br>{{ 'identifier'|trans }}: {{ child.identifier }}{% endif %}</p>
+
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user == campaign and child.donor %}
+                            <a href="{{ path('app_resend_confirmation_email', {id: child.donor.id}) }}"
+                               class="btn btn-primary">{{ 'resend.confirmation.email'|trans }}</a>
+                        {% endif %}
+
                         {% if child.donor is null %}
-                            <a href="{{ path('app_become_a_donor_campaign', {id: child.id}) }}" class="btn btn-primary">{{ 'give.this.child.a.present'|trans }}</a>
+                            <a href="{{ path('app_become_a_donor_campaign', {id: child.id}) }}"
+                               class="btn btn-primary">{{ 'give.this.child.a.present'|trans }}</a>
                         {% else %}
                             <p>{{ 'this.child.is.already.gifted'|trans }}</p>
                         {% endif %}
@@ -35,4 +42,17 @@
             </div>
         {% endfor %}
     </div>
+    {% if not is_granted('IS_AUTHENTICATED_FULLY') or not app.user == campaign %}
+        <div class="row">
+            <div class="col">
+                <h3>{{ 'login'|trans }}</h3>
+                <p>{{ 'we.will.send.an.email.to.the.campaign.owner.with.a.magic.link'|trans }}</p>
+                <form action="{{ path('login') }}" method="POST">
+                    <input type="hidden" name="campaign" value="{{ campaign.id }}">
+                    <button class="btn btn-secondary"
+                            type="submit">{{ 'send.magic.login.link.to.campaign.owner' }}</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

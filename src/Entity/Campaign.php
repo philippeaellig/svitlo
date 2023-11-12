@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: CampaignRepository::class)]
-class Campaign
+#[ORM\HasLifecycleCallbacks]
+class Campaign implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +24,8 @@ class Campaign
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
     #[ORM\Column]
     private ?int $numberOfMale = null;
 
@@ -36,6 +40,17 @@ class Campaign
 
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
+    }
 
     public function __construct()
     {
@@ -161,6 +176,40 @@ class Campaign
     public function setMail(string $mail): static
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+        // TODO: Implement getRoles() method.
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
+        return $this->getId();
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

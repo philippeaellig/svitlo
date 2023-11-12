@@ -28,9 +28,35 @@ use Symfony\Component\Mime\Address;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mime\Crypto\DkimSigner;
 use Twig\Environment;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class CampaignController extends AbstractController
 {
+
+    // constructor
+    private LoggerInterface $logger;
+    private KernelInterface $appKernel;
+    private Environment $twig;
+    private TranslatorInterface $translator;
+    private MailerInterface $mailer;
+    private CampaignRepository $campaignRepository;
+
+    public function __construct(
+        LoggerInterface     $logger,
+        KernelInterface     $appKernel,
+        Environment         $twig,
+        TranslatorInterface $translator,
+        MailerInterface     $mailer,
+        CampaignRepository  $campaignRepository,
+    )
+    {
+        $this->logger = $logger;
+        $this->appKernel = $appKernel;
+        $this->twig = $twig;
+        $this->translator = $translator;
+        $this->mailer = $mailer;
+        $this->campaignRepository = $campaignRepository;
+    }
 
     #[Route('/campaign/view/{slug}', name: 'app_show_campaign')]
     public function index(
@@ -53,16 +79,29 @@ class CampaignController extends AbstractController
         ]);
     }
 
+
+    #[Route('/campaign/resend-confirmation-email/{id}', name: 'app_resend_confirmation_email')]
+    public function resendConfirmationEmail(
+        CampaignRepository $campaignRepository,
+        Donor              $donor,
+        Security           $security,
+    ): Response
+    {
+        // check if user is campaign owner
+        if ($donor->getChild()->getCampaign() === $security->getUser()) {
+            $this->sendConfirmationEmail($donor);
+        }
+        return $this->redirectToRoute('app_show_campaign', [
+            'slug' => $donor->getChild()->getCampaign()->getSlug()
+        ]);
+    }
+
     #[Route('/campaign/become-a-donor/{id}', name: 'app_become_a_donor_campaign')]
     public function becomeADonor(
         CampaignRepository     $campaignRepository,
         TranslatorInterface    $translator,
         EntityManagerInterface $entityManager,
         Request                $request,
-        LoggerInterface        $logger,
-        KernelInterface        $appKernel,
-        Environment            $twig,
-        MailerInterface        $mailer,
         Child                  $child,
     ): Response
     {
@@ -95,32 +134,7 @@ class CampaignController extends AbstractController
             $entityManager->persist($donor);
             $entityManager->flush();
 
-            $signer = new DkimSigner('file:///' . $appKernel->getProjectDir() . '/dkim.key', 'svitlo.ch', 's1');
-
-
-            $email = (new TemplatedEmail())
-                ->from(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
-                ->replyTo(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
-                ->to(new Address($donor->getEmail()))
-                ->cc(new Address($donor->getChild()->getCampaign()->getMail()))
-                ->subject($translator->trans('thank.you.for.your.donation'))
-                ->htmlTemplate('emails/confirmation.html.twig')
-                ->context([
-                    'donor' => $donor,
-                ]);
-
-            $html = $this->render('emails/confirmation.html.twig', [
-                'donor' => $donor,
-            ])->getContent();
-            $email->html($html);
-
-            $signedEmail = $signer->sign($email);
-            try {
-                $mailer->send($signedEmail);
-            } catch (TransportExceptionInterface $e) {
-                $logger->error('An error occurred' . $e->getMessage());
-            }
-
+            $this->sendConfirmationEmail($donor);
 
             return $this->redirectToRoute('app_thank_you_donor', [
                 'slug' => $child->getCampaign()->getSlug()
@@ -133,6 +147,7 @@ class CampaignController extends AbstractController
             'controller_name' => 'CampaignController',
         ]);
     }
+
     /*
         #[Route('/campaign/generate-children/{slug}', name: 'app_show_campaign')]
         public function generateChildren(
@@ -182,4 +197,31 @@ class CampaignController extends AbstractController
                 'slug' => $campaign->getSlug()
             ]);
         }*/
+    private function sendConfirmationEmail(Donor $donor): void
+    {
+
+        $signer = new DkimSigner('file:///' . $this->appKernel->getProjectDir() . '/dkim.key', 'svitlo.ch', 's1');
+        $email = (new TemplatedEmail())
+            ->from(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
+            ->replyTo(new Address('no-reply@svitlo.ch', 'svitlo.ch'))
+            ->to(new Address($donor->getEmail()))
+            ->cc(new Address($donor->getChild()->getCampaign()->getMail()))
+            ->subject($this->translator->trans('thank.you.for.your.donation'))
+            ->htmlTemplate('emails/confirmation.html.twig')
+            ->context([
+                'donor' => $donor,
+            ]);
+
+        $html = $this->render('emails/confirmation.html.twig', [
+            'donor' => $donor,
+        ])->getContent();
+        $email->html($html);
+
+        $signedEmail = $signer->sign($email);
+        try {
+            $this->mailer->send($signedEmail);
+        } catch (TransportExceptionInterface $e) {
+            $this->logger->error('An error occurred' . $e->getMessage());
+        }
+    }
 }
